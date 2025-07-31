@@ -17,15 +17,15 @@ Este projeto implementa uma API RESTful para gerenciamento de tarefas e subtaref
 
 O projeto segue uma arquitetura baseada em camadas, organizada por responsabilidades:
 
-src/main/java/com/ipaas/taskManager
-├── controller       // Endpoints RESTful da API
-├── configuration    // Configurações da aplicação (Ex: Swagger)
-├── dto              // Objetos de Transferência de Dados (Requisição e Resposta)
-├── exception        // Classes para tratamento de exceções customizadas
-├── model            // Entidades do domínio (User, Task, Subtask)
-├── repository       // Interfaces de acesso a dados (Spring Data JPA)
-├── service          // Camada de lógica de negócio e regras das entidades
-└── TaskManagerApplication.java // Classe principal da aplicação
+src/main/java/com/ipaas/taskManager  
+├── controller       // Endpoints RESTful da API  
+├── configuration    // Configurações da aplicação (Ex: Swagger)  
+├── dto              // Objetos de Transferência de Dados (Requisição e Resposta)  
+├── exception        // Classes para tratamento de exceções customizadas  
+├── model            // Entidades do domínio (User, Task, Subtask)  
+├── repository       // Interfaces de acesso a dados (Spring Data JPA)  
+├── service          // Camada de lógica de negócio e regras das entidades  
+└── TaskManagerApplication.java // Classe principal da aplicação  
 
 
 ## Como Rodar o Projeto
@@ -75,7 +75,7 @@ Após iniciar a aplicação, você pode acessar:
     * Credenciais (padrão do `application.properties`):
         * JDBC URL: `jdbc:h2:mem:desafio_db`
         * User Name: `sa`
-        * Password: ` ` (vazio)
+        * Password: (vazio)
 * **Swagger UI (Documentação da API):** Para explorar e testar os endpoints interativamente.
     * URL: `http://localhost:8080/swagger-ui.html`
 
