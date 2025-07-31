@@ -1,11 +1,8 @@
 package com.ipass.taskManager.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 public class SubtaskRequestDto {
@@ -15,7 +12,4 @@ public class SubtaskRequestDto {
 
     @Size(max = 500, message = "A descrição não pode exceder 500 caracteres.")
     private String descricao;
-
-    @NotNull(message = "O ID da tarefa principal (task) não pode ser nulo.")
-    private UUID tarefaId;
 }

@@ -4,9 +4,11 @@ import com.ipass.taskManager.dto.TaskRequestDto;
 import com.ipass.taskManager.model.Task;
 import com.ipass.taskManager.model.TaskStatus;
 import com.ipass.taskManager.model.User;
+import com.ipass.taskManager.repository.SubtaskRepository;
 import com.ipass.taskManager.repository.TaskRepository;
 import com.ipass.taskManager.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final SubtaskRepository subtaskRepository;
 
     @Transactional
     public Task createTask(TaskRequestDto taskRequestDto) {
@@ -43,10 +46,12 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<Task> getAllTasks(TaskStatus status) {
-        if (status != null) {
-            return taskRepository.findByStatus(status);
-        }
+    public List<Task> getAllTasksByStatus(TaskStatus status) {
+        return taskRepository.findByStatus(status);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
@@ -65,8 +70,22 @@ public class TaskService {
     public Task updateTaskStatus(UUID id, TaskStatus status) {
         Task existingTask = getTaskById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada com o id: " + id));
+                
+        if (status == TaskStatus.CONCLUIDA) {
+            boolean hasPendingSubtasks = subtaskRepository.findByTarefaId_Id(id)
+                    .stream()
+                    .anyMatch(subtask -> subtask.getStatus() != TaskStatus.CONCLUIDA);
 
+            if (hasPendingSubtasks) {
+                throw new IllegalStateException("A tarefa não pode ser concluída pois possui subtarefas pendentes.");
+            }
+        }
         existingTask.setStatus(status);
+        if (status == TaskStatus.CONCLUIDA) {
+            existingTask.setDataConclusao(LocalDateTime.now());
+        } else {
+            existingTask.setDataConclusao(null);
+        }
 
         return taskRepository.save(existingTask);
     }

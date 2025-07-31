@@ -1,5 +1,42 @@
-{"properties": [{
-  "name": "springdoc.swagger-ui.path",
-  "type": "java.lang.String",
-  "description": "A description for 'springdoc.swagger-ui.path'"
-}]}
+{"properties": [
+  {
+    "name": "springdoc.swagger-ui.path",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.swagger-ui.path'"
+  },
+  {
+    "name": "springdoc.info.title",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.info.title'"
+  },
+  {
+    "name": "springdoc.info.version",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.info.version'"
+  },
+  {
+    "name": "springdoc.info.description",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.info.description'"
+  },
+  {
+    "name": "springdoc.info.contact.name",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.info.contact.name'"
+  },
+  {
+    "name": "springdoc.info.contact.url",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.info.contact.url'"
+  },
+  {
+    "name": "springdoc.info.contact.email",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.info.contact.email'"
+  },
+  {
+    "name": "springdoc.documentation.swagger.v2.api.info.title",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.documentation.swagger.v2.api.info.title'"
+  }
+]}

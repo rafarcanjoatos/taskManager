@@ -49,12 +49,25 @@ public class TaskController {
     }
 
     @Operation(
+        summary = "Busca tarefas por status",
+        description = "Busca todas as tarefas de um status específico e retorna seus detalhes"
+    )
+    @GetMapping("/status")
+    public ResponseEntity<List<TaskResponseDto>> getAllTasksByStatus(@RequestParam(required = false) TaskStatus status) {
+        List<Task> tasks = taskService.getAllTasksByStatus(status);
+        List<TaskResponseDto> dtos = tasks.stream()
+                .map(TaskResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
+    }
+
+    @Operation(
         summary = "Busca todas as tarefas",
         description = "Busca todas as tarefas e retorna seus detalhes"
     )
     @GetMapping
-    public ResponseEntity<List<TaskResponseDto>> getAllTasks(@RequestParam(required = false) TaskStatus status) {
-        List<Task> tasks = taskService.getAllTasks(status);
+    public ResponseEntity<List<TaskResponseDto>> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
         List<TaskResponseDto> dtos = tasks.stream()
                 .map(TaskResponseDto::fromEntity)
                 .collect(Collectors.toList());
@@ -76,7 +89,7 @@ public class TaskController {
         description = "Atualiza somente o status de uma tarefa por ID"
     )
     @PatchMapping("/{id}/status")
-    public ResponseEntity<TaskResponseDto> updateTaskById(@PathVariable UUID id, TaskStatus status) {
+    public ResponseEntity<TaskResponseDto> updateTaskStatusById(@PathVariable UUID id, @RequestBody TaskStatus status) {
         Task updatedTask = taskService.updateTaskStatus(id, status);
         return ResponseEntity.ok(TaskResponseDto.fromEntity(updatedTask));
     }

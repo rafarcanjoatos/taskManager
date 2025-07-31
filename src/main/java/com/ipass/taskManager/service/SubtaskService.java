@@ -9,6 +9,7 @@ import com.ipass.taskManager.repository.SubtaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +22,9 @@ public class SubtaskService {
     private final TaskService taskService;
     
     @Transactional
-    public Subtask createSubtask(SubtaskRequestDto subtaskRequestDto) {
-        Task parentTask = taskService.getTaskById(subtaskRequestDto.getTarefaId())
-                .orElseThrow(() -> new ResourceNotFoundException("Tarefa pai não encontrada com o id: " + subtaskRequestDto.getTarefaId()));
+    public Subtask createSubtask(UUID parentTaskId, SubtaskRequestDto subtaskRequestDto) {
+        Task parentTask = taskService.getTaskById(parentTaskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa pai não encontrada com o id: " + parentTaskId));
  
         Subtask subtask = new Subtask();
         subtask.setTitulo(subtaskRequestDto.getTitulo());
@@ -58,14 +59,19 @@ public class SubtaskService {
     }
 
 
+    @Transactional
     public Subtask updateSubtaskStatus(UUID id, TaskStatus status) {
         Subtask existingSubtask = getSubtaskById(id);
 
         existingSubtask.setStatus(status);
+        if (status == TaskStatus.CONCLUIDA) {
+            existingSubtask.setDataConclusao(LocalDateTime.now());
+        } else {
+            existingSubtask.setDataConclusao(null);
+        }
 
         return subtaskRepository.save(existingSubtask);
     }
-
     
 
     public void deleteSubtask(UUID id) {

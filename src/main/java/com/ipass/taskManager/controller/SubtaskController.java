@@ -2,9 +2,7 @@ package com.ipass.taskManager.controller;
 
 import com.ipass.taskManager.dto.SubtaskRequestDto;
 import com.ipass.taskManager.dto.SubtaskResponseDto;
-import com.ipass.taskManager.dto.TaskResponseDto;
 import com.ipass.taskManager.model.Subtask;
-import com.ipass.taskManager.model.Task;
 import com.ipass.taskManager.model.TaskStatus;
 import com.ipass.taskManager.service.SubtaskService;
 
@@ -34,8 +32,7 @@ public class SubtaskController {
     )
     @PostMapping
     public ResponseEntity<SubtaskResponseDto> createSubtask(@PathVariable UUID tarefaId, @Valid @RequestBody SubtaskRequestDto subtaskRequestDto) {
-        subtaskRequestDto.setTarefaId(tarefaId);
-        Subtask createdSubtask = subtaskService.createSubtask(subtaskRequestDto);
+        Subtask createdSubtask = subtaskService.createSubtask(tarefaId, subtaskRequestDto);
         return new ResponseEntity<>(SubtaskResponseDto.fromEntity(createdSubtask), HttpStatus.CREATED);
     }
 
@@ -57,7 +54,7 @@ public class SubtaskController {
         description = "Busca uma subtarefa por ID e retorna seus detalhes"
     )
     @GetMapping("/{subtarefaId}")
-    public ResponseEntity<SubtaskResponseDto> getSubtaskById(@PathVariable UUID tarefaId, @PathVariable UUID subtarefaId) {
+    public ResponseEntity<SubtaskResponseDto> getSubtaskById(@PathVariable UUID subtarefaId) {
         Subtask subtask = subtaskService.getSubtaskById(subtarefaId);
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(subtask));
     }
@@ -77,8 +74,8 @@ public class SubtaskController {
         description = "Atualiza o status de uma subtarefa por ID"
     )
     @PatchMapping("/{subtarefaId}/status")
-    public ResponseEntity<SubtaskResponseDto> updateSubtaskById(@PathVariable UUID id, TaskStatus status) {
-        Subtask updatedSubtask = subtaskService.updateSubtaskStatus(id, status);
+    public ResponseEntity<SubtaskResponseDto> updateSubtaskStatusById(@PathVariable UUID subtarefaId, @RequestBody TaskStatus status) {
+        Subtask updatedSubtask = subtaskService.updateSubtaskStatus(subtarefaId, status);
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(updatedSubtask));
     }
    

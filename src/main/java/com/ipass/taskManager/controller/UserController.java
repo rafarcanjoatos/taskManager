@@ -1,10 +1,7 @@
 package com.ipass.taskManager.controller;
 
-import com.ipass.taskManager.dto.TaskRequestDto;
-import com.ipass.taskManager.dto.TaskResponseDto;
 import com.ipass.taskManager.dto.UserRequestDto;
 import com.ipass.taskManager.dto.UserResponseDto;
-import com.ipass.taskManager.model.Task;
 import com.ipass.taskManager.model.User;
 import com.ipass.taskManager.service.UserService;
 
