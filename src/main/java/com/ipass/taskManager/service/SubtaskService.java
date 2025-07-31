@@ -43,7 +43,7 @@ public class SubtaskService {
         taskService.getTaskById(parentTaskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarefa pai não encontrada com o id: " + parentTaskId));
  
-        return subtaskRepository.findByTarefaId(parentTaskId);
+        return subtaskRepository.findByTarefaId_Id(parentTaskId);
     }
 
     public Subtask updateSubtask(UUID id, SubtaskRequestDto subtaskDetailsDto) {

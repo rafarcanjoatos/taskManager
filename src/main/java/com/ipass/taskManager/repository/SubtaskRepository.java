@@ -11,5 +11,5 @@ import com.ipass.taskManager.model.Subtask;
 @Repository
 public interface SubtaskRepository extends JpaRepository<Subtask, UUID> {
 
-    List<Subtask> findByTarefaId(UUID parentTaskId);
+    public List<Subtask> findByTarefaId_Id(UUID parentTaskId);
 }

@@ -48,14 +48,14 @@ public class Subtask {
     @Enumerated(EnumType.STRING)
     private TaskStatus status = TaskStatus.PENDENTE;
 
-    @Column(name = "creation_date", updatable = false)
+    @Column(name = "data_criacao", updatable = false)
     @CreationTimestamp
     private LocalDateTime dataCriacao;
 
-    @Column(name = "completion_date")
+    @Column(name = "data_conclusao")
     private LocalDateTime dataConclusao;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id", nullable = false)
+    @JoinColumn(name = "tarefa_id", nullable = false)
     private Task tarefaId;
 }
