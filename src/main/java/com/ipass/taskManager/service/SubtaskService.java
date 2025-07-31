@@ -4,6 +4,7 @@ import com.ipass.taskManager.dto.SubtaskRequestDto;
 import com.ipass.taskManager.exception.ResourceNotFoundException;
 import com.ipass.taskManager.model.Subtask;
 import com.ipass.taskManager.model.Task;
+import com.ipass.taskManager.model.TaskStatus;
 import com.ipass.taskManager.repository.SubtaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class SubtaskService {
 
     private final SubtaskRepository subtaskRepository;
     private final TaskService taskService;
-
+    
+    @Transactional
     public Subtask createSubtask(SubtaskRequestDto subtaskRequestDto) {
         Task parentTask = taskService.getTaskById(subtaskRequestDto.getTarefaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tarefa pai não encontrada com o id: " + subtaskRequestDto.getTarefaId()));
@@ -28,6 +29,7 @@ public class SubtaskService {
         subtask.setTitulo(subtaskRequestDto.getTitulo());
         subtask.setDescricao(subtaskRequestDto.getDescricao());
         subtask.setTarefaId(parentTask);
+        subtask.setUser(parentTask.getUser());
  
         return subtaskRepository.save(subtask);
     }
@@ -46,7 +48,7 @@ public class SubtaskService {
         return subtaskRepository.findByTarefaId_Id(parentTaskId);
     }
 
-    public Subtask updateSubtask(UUID id, SubtaskRequestDto subtaskDetailsDto) {
+    public Subtask updateSubtaskById(UUID id, SubtaskRequestDto subtaskDetailsDto) {
         Subtask existingSubtask = getSubtaskById(id);
 
         existingSubtask.setTitulo(subtaskDetailsDto.getTitulo());
@@ -54,6 +56,17 @@ public class SubtaskService {
 
         return subtaskRepository.save(existingSubtask);
     }
+
+
+    public Subtask updateSubtaskStatus(UUID id, TaskStatus status) {
+        Subtask existingSubtask = getSubtaskById(id);
+
+        existingSubtask.setStatus(status);
+
+        return subtaskRepository.save(existingSubtask);
+    }
+
+    
 
     public void deleteSubtask(UUID id) {
         Subtask subtask = getSubtaskById(id);

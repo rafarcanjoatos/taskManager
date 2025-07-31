@@ -18,6 +18,9 @@ public class SubtaskResponseDto {
     private UUID tarefaId;
 
     public static SubtaskResponseDto fromEntity(Subtask subtask) {
+        if (subtask == null) {
+            return null;
+        }
         SubtaskResponseDto dto = new SubtaskResponseDto();
         dto.setId(subtask.getId());
         dto.setTitulo(subtask.getTitulo());
@@ -25,7 +28,9 @@ public class SubtaskResponseDto {
         dto.setStatus(subtask.getStatus());
         dto.setDataCriacao(subtask.getDataCriacao());
         dto.setDataConclusao(subtask.getDataConclusao());
-        dto.setTarefaId(subtask.getTarefaId().getId());
+        if (subtask.getTarefaId() != null) {
+            dto.setTarefaId(subtask.getTarefaId().getId());
+        }
         return dto;
     }
 }

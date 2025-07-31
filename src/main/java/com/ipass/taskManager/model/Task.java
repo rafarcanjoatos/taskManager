@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,18 +40,22 @@ public class Task {
     private UUID id;
 
     @NotBlank
+    @Column(length = 100)
     @Size(max = 100)
     private String titulo;
 
+    @Column(length = 500)
     @Size(max = 500)
     private String descricao;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status = TaskStatus.PENDENTE;
 
+    @Column(name = "data_criacao", updatable = false)
     @CreationTimestamp
     private LocalDateTime dataCriacao;
 
+    @Column(name = "data_conclusao")
     private LocalDateTime dataConclusao;
 
     @ManyToOne(fetch = FetchType.LAZY)

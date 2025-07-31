@@ -13,6 +13,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
@@ -31,6 +33,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -58,4 +61,8 @@ public class Subtask {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tarefa_id", nullable = false)
     private Task tarefaId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
