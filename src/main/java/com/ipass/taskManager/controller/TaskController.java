@@ -50,10 +50,8 @@ public class TaskController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponseDto> getTaskById(@PathVariable UUID id) {
-        return taskService.getTaskById(id)
-                .map(TaskResponseDto::fromEntity)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Task task = taskService.getTaskById(id);
+        return ResponseEntity.ok(TaskResponseDto.fromEntity(task));
     }
 
     @Operation(

@@ -26,6 +26,7 @@ public class SubtaskController {
     
     private final SubtaskService subtaskService;
     
+    
     @Operation(
         summary = "Cria uma subtarefa",
         description = "Cria uma subtarefa para uma tarefa específica, com os detalhes fornecidos"
@@ -35,6 +36,7 @@ public class SubtaskController {
         Subtask createdSubtask = subtaskService.createSubtask(tarefaId, subtaskRequestDto);
         return new ResponseEntity<>(SubtaskResponseDto.fromEntity(createdSubtask), HttpStatus.CREATED);
     }
+
 
     @Operation(
         summary = "Lista subtarefas de uma tarefa",
@@ -49,6 +51,7 @@ public class SubtaskController {
         return ResponseEntity.ok(responseDtos);
     }
 
+
     @Operation(
         summary = "Busca uma subtarefa por ID",
         description = "Busca uma subtarefa por ID e retorna seus detalhes"
@@ -59,6 +62,7 @@ public class SubtaskController {
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(subtask));
     }
 
+
     @Operation(
         summary = "Atualiza uma subtarefa por ID",
         description = "Atualiza os detalhes de uma subtarefa por ID, como título e descrição"
@@ -68,6 +72,7 @@ public class SubtaskController {
         Subtask updatedSubtask = subtaskService.updateSubtaskById(subtarefaId, subtaskDetailsDto);
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(updatedSubtask));
     }
+
 
     @Operation(
         summary = "Atualiza o status da subtarefa",
