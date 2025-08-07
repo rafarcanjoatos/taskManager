@@ -95,7 +95,7 @@ public class TaskController {
         description = "Atualiza somente o status de uma tarefa por ID"
     )
     @PatchMapping("/{id}/status")
-    public ResponseEntity<TaskResponseDto> updateTaskStatusById(@PathVariable UUID id, @RequestBody TaskStatus status) {
+    public ResponseEntity<TaskResponseDto> updateTaskStatusById(@PathVariable UUID id, @RequestParam TaskStatus status) {
         Task updatedTask = taskService.updateTaskStatus(id, status);
         return ResponseEntity.ok(TaskResponseDto.fromEntity(updatedTask));
     }

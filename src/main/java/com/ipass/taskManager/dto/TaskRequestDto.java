@@ -18,5 +18,5 @@ public class TaskRequestDto {
     private String descricao;
 
     @NotNull(message = "O ID do usuário não pode ser nulo.")
-    private UUID userId;
+    private UUID usuarioId;
 }

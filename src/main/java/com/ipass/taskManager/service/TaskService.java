@@ -3,10 +3,8 @@ package com.ipass.taskManager.service;
 import com.ipass.taskManager.dto.TaskRequestDto;
 import com.ipass.taskManager.model.Task;
 import com.ipass.taskManager.model.TaskStatus;
-import com.ipass.taskManager.model.User;
 import com.ipass.taskManager.repository.SubtaskRepository;
 import com.ipass.taskManager.repository.TaskRepository;
-import com.ipass.taskManager.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
     private final SubtaskRepository subtaskRepository;
 
     
@@ -35,13 +32,12 @@ public class TaskService {
     public Task createTask(TaskRequestDto taskRequestDto) {
         validateTaskRequest(taskRequestDto);
         
-        User user = userRepository.findById(taskRequestDto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o id: " + taskRequestDto.getUserId()));
+        UUID usuarioId = taskRequestDto.getUsuarioId();
 
         Task task = new Task();
         task.setTitulo(taskRequestDto.getTitulo());
         task.setDescricao(taskRequestDto.getDescricao());
-        task.setUser(user);
+        task.setUsuarioId(usuarioId);
 
         return taskRepository.save(task);
     }
@@ -117,7 +113,7 @@ public class TaskService {
             throw new ValidationException("O título da tarefa não pode exceder 100 caracteres.");
         }
 
-        if (dto.getUserId() == null) { 
+        if (dto.getUsuarioId() == null) { 
             throw new ValidationException("O ID do usuário é obrigatório.");
         }        
 

@@ -1,5 +1,7 @@
 package com.ipass.taskManager.model;
 
+import java.util.UUID;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -18,5 +20,5 @@ public class Subtask extends AbstractTask {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tarefa_id", nullable = false)
-    private Task tarefa;
+    private UUID tarefaId;
 }

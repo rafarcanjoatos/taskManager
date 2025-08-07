@@ -15,7 +15,7 @@ public class TaskResponseDto {
     private TaskStatus status;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataConclusao;
-    private UUID userId;
+    private UUID usuarioId;
 
     public static TaskResponseDto fromEntity(Task task) {
         if (task == null) {
@@ -28,8 +28,8 @@ public class TaskResponseDto {
         dto.setStatus(task.getStatus());
         dto.setDataCriacao(task.getDataCriacao());
         dto.setDataConclusao(task.getDataConclusao());
-        if (task.getUser() != null) {
-            dto.setUserId(task.getUser().getId());
+        if (task.getUsuarioId() != null) {
+            dto.setUsuarioId(task.getUsuarioId());
         }
         return dto;
     }

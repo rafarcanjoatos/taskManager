@@ -54,6 +54,6 @@ public abstract class AbstractTask {
     private LocalDateTime dataConclusao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private UUID usuarioId;
 }

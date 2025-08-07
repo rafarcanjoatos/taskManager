@@ -10,7 +10,7 @@ import jakarta.persistence.OneToMany;
 public class Task extends AbstractTask {
 
     @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
-    @SuppressWarnings("unused") //Apenas para definir o relacionamento (;
+    @SuppressWarnings("unused") //Apenas para definir o relacionamento
     private List<Subtask> subtarefas;
 
 }

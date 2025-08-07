@@ -37,7 +37,7 @@ class TaskServiceTest {
         task = new TaskRequestDto();
         task.setTitulo("Test Task");
         task.setDescricao("Test Description");
-        task.setUserId(user.getId());
+        task.setUsuarioId(user.getId());
     }
 
     @Test
