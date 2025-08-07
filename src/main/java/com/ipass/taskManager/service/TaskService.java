@@ -7,7 +7,10 @@ import com.ipass.taskManager.model.User;
 import com.ipass.taskManager.repository.SubtaskRepository;
 import com.ipass.taskManager.repository.TaskRepository;
 import com.ipass.taskManager.repository.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ValidationException;
+
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +20,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +50,11 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<Task> getAllTasksByStatus(TaskStatus status) {
-        return taskRepository.findByStatus(status);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Task> getAllTasks() {
+    public List<Task> getAllTasks(@RequestParam(required = false) TaskStatus status) {
+        if (status != null) {
+            return taskRepository.findByStatus(status);
+        }
+                
         return taskRepository.findAll();
     }
 
@@ -89,4 +92,5 @@ public class TaskService {
 
         return taskRepository.save(existingTask);
     }
+
 }

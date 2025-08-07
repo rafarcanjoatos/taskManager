@@ -57,14 +57,22 @@ Esta é a forma mais fácil de subir a aplicação e o banco de dados. Certifiqu
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git](https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git) # Substitua pelo seu usuário e nome do repositório
-    cd SEU_REPOSITORIO
+    git clone [https://github.com/rafarcanjoatos/taskManager]
+    cd taskManager
     ```
-2.  **Construa e suba os serviços:**
+2.  **[Docker Compose] Build e suba os serviços:**
     ```bash
     docker-compose up --build
     ```
     A aplicação estará disponível em `http://localhost:8080`.
+
+3.  **[Docker] Construa e suba os serviços:**
+    ```bash
+    docker build -t task-manager-app .
+    docker run -p 8080:8080 --name taskmanager-container task-manager-app
+    ```
+    A aplicação estará disponível em `http://localhost:8080`.
+
 
 ## Endpoints da API
 

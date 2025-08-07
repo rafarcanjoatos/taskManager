@@ -29,7 +29,7 @@ public class SubtaskService {
         Subtask subtask = new Subtask();
         subtask.setTitulo(subtaskRequestDto.getTitulo());
         subtask.setDescricao(subtaskRequestDto.getDescricao());
-        subtask.setTarefaId(parentTask);
+        subtask.setTarefa(parentTask);
         subtask.setUser(parentTask.getUser());
  
         return subtaskRepository.save(subtask);

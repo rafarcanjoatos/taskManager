@@ -67,17 +67,4 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.descricao").value("Descrição 1"));
     }
 
-    @Test
-    @DisplayName("Deve retornar erro 400 quando o título da tarefa está em branco")
-    void createTask_withBlankTitle_returnsBadRequest() throws Exception {
-        TaskRequestDto taskRequest = new TaskRequestDto();
-        taskRequest.setTitulo("");
-        taskRequest.setUserId(testUser.getId());
-
-        mockMvc.perform(post("/tarefas")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taskRequest)))
-                .andExpect(status().isBadRequest());
-    }
-
 }

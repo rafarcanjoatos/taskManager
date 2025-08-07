@@ -28,8 +28,8 @@ public class SubtaskResponseDto {
         dto.setStatus(subtask.getStatus());
         dto.setDataCriacao(subtask.getDataCriacao());
         dto.setDataConclusao(subtask.getDataConclusao());
-        if (subtask.getTarefaId() != null) {
-            dto.setTarefaId(subtask.getTarefaId().getId());
+        if (subtask.getTarefa() != null) {
+            dto.setTarefaId(subtask.getTarefa().getId());
         }
         return dto;
     }

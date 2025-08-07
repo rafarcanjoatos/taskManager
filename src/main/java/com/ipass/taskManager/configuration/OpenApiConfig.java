@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 @OpenAPIDefinition(
     info = @Info(
         title = "Task Manager API",
-        version = "1.0.0",
+        version = "2.0.0",
         description = "API RESTful para gerenciar tarefas, subtarefas e usuários, em um sistema de controle de atividades.",
         contact = @Contact(
             name = "Rafael Arcanjo",
