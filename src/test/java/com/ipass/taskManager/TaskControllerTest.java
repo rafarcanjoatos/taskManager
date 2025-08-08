@@ -49,8 +49,8 @@ class TaskControllerTest {
     @BeforeEach
     @SuppressWarnings("unused")
     void setUp() {
-        taskRepository.deleteAll();
         subtaskRepository.deleteAll();
+        taskRepository.deleteAll();
         userRepository.deleteAll();
 
         testUser = new User();
@@ -63,8 +63,8 @@ class TaskControllerTest {
     @DisplayName("Teste de integração: Criar uma tarefa")
     void createTask_withValidData_returnsCreated() throws Exception {
         TaskRequestDto taskRequest = new TaskRequestDto();
-        taskRequest.setTitulo("Tarefa 1");
-        taskRequest.setDescricao("Descrição 1");
+        taskRequest.setTitulo("Tarefa 0");
+        taskRequest.setDescricao("Descrição 0");
         taskRequest.setUsuarioId(testUser.getId());
 
 
@@ -73,8 +73,8 @@ class TaskControllerTest {
                         .content(objectMapper.writeValueAsString(taskRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.titulo").value("Tarefa 1"))
-                .andExpect(jsonPath("$.descricao").value("Descrição 1"));
+                .andExpect(jsonPath("$.titulo").value("Tarefa 0"))
+                .andExpect(jsonPath("$.descricao").value("Descrição 0"));
     }
 
 
@@ -107,15 +107,15 @@ class TaskControllerTest {
     }
 
     @Test
-    @DisplayName("Teste de integração: Obter tarefas por status")
-    void getTasksByStatus_whenTasksExist_returnsTaskList() throws Exception {
+    @DisplayName("Teste de integração: Obter tarefas filtrando por status")
+    void getAllTasks_whenFilteringByStatus_returnsFilteredList() throws Exception {
         Task task = new Task();
         task.setTitulo("Tarefa Pendente");
         task.setUsuario(testUser);
         task.setStatus(TaskStatus.PENDENTE);
         Task savedTask = taskRepository.save(task);
 
-        mockMvc.perform(get("/tarefas/status")
+        mockMvc.perform(get("/tarefas")
                         .param("status", TaskStatus.PENDENTE.name()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())

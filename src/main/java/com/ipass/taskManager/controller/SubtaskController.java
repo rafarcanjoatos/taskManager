@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,6 +91,16 @@ public class SubtaskController {
     public ResponseEntity<SubtaskResponseDto> updateSubtaskStatusById(@PathVariable UUID subtarefaId, @RequestParam TaskStatus status) {
         Subtask updatedSubtask = subtaskService.updateSubtaskStatus(subtarefaId, status);
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(updatedSubtask));
+    }
+
+    @Operation(
+    summary = "Deleta uma subtarefa",
+    description = "Deleta uma subtarefa por ID"
+    )
+    @DeleteMapping("/{subtarefaId}")
+    public ResponseEntity<SubtaskResponseDto> deleteSubtaskStatusById(@PathVariable UUID subtarefaId) {
+        Subtask deletedSubtask = subtaskService.deleteSubtask(subtarefaId);        
+        return ResponseEntity.ok(SubtaskResponseDto.fromEntity(deletedSubtask));
     }
    
 }

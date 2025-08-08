@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class UserController {
         return new ResponseEntity<>(UserResponseDto.fromEntity(createdUser), HttpStatus.CREATED);
     }
 
+
     @Operation(
         summary = "Busca um usuário por ID",
         description = "Busca apenas um usuário por ID e retorna seus detalhes"
@@ -52,6 +54,7 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
 
     @Operation(
         summary = "Busca todos os usuário",
@@ -66,6 +69,7 @@ public class UserController {
         return ResponseEntity.ok(dtos);
     }
 
+
     @Operation(
         summary = "Atualiza um usuário por ID",
         description = "Atualiza um usuário por id e retorna seus detalhes"
@@ -75,4 +79,16 @@ public class UserController {
         User updatedUser = userService.updateUser(id, userRequestDto);
         return ResponseEntity.ok(UserResponseDto.fromEntity(updatedUser));
     }
+
+
+    @Operation(
+        summary = "Deleta um usuário por ID",
+        description = "Deleta um usuário por id"
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserResponseDto> deleteUserById(@PathVariable UUID id) {
+        User deletedUser = userService.deleteUser(id);
+        return ResponseEntity.ok(UserResponseDto.fromEntity(deletedUser));
+    }
+
 }

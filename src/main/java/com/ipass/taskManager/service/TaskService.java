@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ipass.taskManager.dto.TaskRequestDto;
 import com.ipass.taskManager.model.Task;
@@ -55,7 +54,7 @@ public class TaskService {
 
 
     @Transactional(readOnly = true)
-    public List<Task> getAllTasks(@RequestParam(required = false) TaskStatus status) {
+    public List<Task> getAllTasks(TaskStatus status) {
         if (status != null) {
             return taskRepository.findByStatus(status);
         }
@@ -80,31 +79,46 @@ public class TaskService {
 
     @Transactional
     public Task updateTaskStatus(UUID id, TaskStatus status) {
-        if (status == null || (status != TaskStatus.PENDENTE && status != TaskStatus.EM_ANDAMENTO && status != TaskStatus.CONCLUIDA)){
+        if (status == null || (status != TaskStatus.PENDENTE && status != TaskStatus.EM_ANDAMENTO && status != TaskStatus.CONCLUIDA && status != TaskStatus.EXCLUIDA)){
             throw new ValidationException("O status da tarefa é obrigatório.");
         }
 
         Task existingTask = getTaskById(id);
                 
-        if (status == TaskStatus.CONCLUIDA) {
+        if (status == TaskStatus.CONCLUIDA || status == TaskStatus.EXCLUIDA) {
             boolean hasPendingSubtasks = subtaskRepository.findByTarefaId_Id(id)
                     .stream()
-                    .anyMatch(subtask -> subtask.getStatus() != TaskStatus.CONCLUIDA);
+                    .anyMatch(subtask -> subtask.getStatus() != TaskStatus.CONCLUIDA && subtask.getStatus() != TaskStatus.EXCLUIDA);
 
-            if (hasPendingSubtasks) {
+            if (hasPendingSubtasks && status == TaskStatus.CONCLUIDA) {
                 throw new IllegalStateException("A tarefa não pode ser concluída pois possui subtarefas pendentes.");
+            }
+
+            if (hasPendingSubtasks && status == TaskStatus.EXCLUIDA) {
+                throw new IllegalStateException("A tarefa não pode ser excluída pois possui subtarefas pendentes.");
             }
         }
 
         existingTask.setStatus(status);
         
-        if (status == TaskStatus.CONCLUIDA) {
+        if (status == TaskStatus.CONCLUIDA || status == TaskStatus.EXCLUIDA) {
             existingTask.setDataConclusao(LocalDateTime.now());
         } else {
             existingTask.setDataConclusao(null);
         }
 
         return taskRepository.save(existingTask);
+    }
+
+
+    @Transactional
+    public Task deleteTask(UUID id) {
+        Task task = getTaskById(id);
+        updateTaskStatus(id, TaskStatus.EXCLUIDA);
+
+        taskRepository.delete(task);
+
+        return task;
     }
 
 

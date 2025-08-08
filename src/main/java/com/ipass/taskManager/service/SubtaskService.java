@@ -54,7 +54,7 @@ public class SubtaskService {
         return subtaskRepository.findByTarefaId_Id(parentTaskId);
     }
 
-
+    @Transactional
     public Subtask updateSubtaskById(UUID id, SubtaskRequestDto subtaskRequestDto) {
         validateSubtaskRequest(subtaskRequestDto);
 
@@ -69,14 +69,14 @@ public class SubtaskService {
 
     @Transactional
     public Subtask updateSubtaskStatus(UUID id, TaskStatus status) {
-        if (status == null || (status != TaskStatus.PENDENTE && status != TaskStatus.EM_ANDAMENTO && status != TaskStatus.CONCLUIDA)){
+        if (status == null || (status != TaskStatus.PENDENTE && status != TaskStatus.EM_ANDAMENTO && status != TaskStatus.CONCLUIDA && status != TaskStatus.EXCLUIDA)){
             throw new ValidationException("O status da tarefa é obrigatório.");
         }
 
         Subtask existingSubtask = getSubtaskById(id);
 
         existingSubtask.setStatus(status);
-        if (status == TaskStatus.CONCLUIDA) {
+        if (status == TaskStatus.CONCLUIDA || status == TaskStatus.EXCLUIDA) {
             existingSubtask.setDataConclusao(LocalDateTime.now());
         } else {
             existingSubtask.setDataConclusao(null);
@@ -86,9 +86,14 @@ public class SubtaskService {
     }
     
 
-    public void deleteSubtask(UUID id) {
+    @Transactional
+    public Subtask deleteSubtask(UUID id) {
         Subtask subtask = getSubtaskById(id);
+        updateSubtaskStatus(id, TaskStatus.EXCLUIDA);
+        
         subtaskRepository.delete(subtask);
+
+        return subtask;
     }
 
 

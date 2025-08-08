@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import com.ipass.taskManager.model.TaskStatus;
 import com.ipass.taskManager.service.TaskService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,25 +58,26 @@ public class TaskController {
     }
 
     @Operation(
-        summary = "Busca tarefas por status",
-        description = "Busca todas as tarefas de um status específico e retorna seus detalhes"
-    )
-    @GetMapping("/status")
-    public ResponseEntity<List<TaskResponseDto>> getAllTasksByStatus(@RequestParam(required = false) TaskStatus status) {
-        List<Task> tasks = taskService.getAllTasks(status);
-        List<TaskResponseDto> dtos = tasks.stream()
-                .map(TaskResponseDto::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
-    }
-
-    @Operation(
-        summary = "Busca todas as tarefas",
-        description = "Busca todas as tarefas e retorna seus detalhes"
+        summary = "Busca todas as tarefas ou filtra por status",
+        description = "Busca todas as tarefas ou filtra por um status específico (PENDENTE, EM_ANDAMENTO, CONCLUIDA). O status EXCLUIDA não é permitido para consulta."
     )
     @GetMapping
-    public ResponseEntity<List<TaskResponseDto>> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks(null);
+    public ResponseEntity<List<TaskResponseDto>> getAllTasks(
+        @Parameter(description = "Status para filtrar as tarefas.", schema = @Schema(type = "string", allowableValues = {"PENDENTE", "EM_ANDAMENTO", "CONCLUIDA"}))
+        @RequestParam(required = false) String status
+    ) {
+        TaskStatus taskStatus = null;
+        if (status != null && !status.trim().isEmpty()) {
+            if (TaskStatus.EXCLUIDA.name().equalsIgnoreCase(status)) {
+                throw new IllegalArgumentException("O status 'EXCLUIDA' não é válido para consulta.");
+            }
+            try {
+                taskStatus = TaskStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Status inválido: " + status);
+            }
+        }
+        List<Task> tasks = taskService.getAllTasks(taskStatus);
         List<TaskResponseDto> dtos = tasks.stream()
                 .map(TaskResponseDto::fromEntity)
                 .collect(Collectors.toList());
@@ -99,4 +103,16 @@ public class TaskController {
         Task updatedTask = taskService.updateTaskStatus(id, status);
         return ResponseEntity.ok(TaskResponseDto.fromEntity(updatedTask));
     }
+
+    
+    @Operation(
+        summary = "Deleta uma tarefa",
+        description = "Deleta uma tarefa por ID, se não houver subtarefas"
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TaskResponseDto> deleteTaskById(@PathVariable UUID id) {
+        Task deletedTask = taskService.deleteTask(id);
+        return ResponseEntity.ok(TaskResponseDto.fromEntity(deletedTask));
+    }
+
 }
