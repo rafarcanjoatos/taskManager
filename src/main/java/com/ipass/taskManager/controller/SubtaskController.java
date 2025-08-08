@@ -23,6 +23,8 @@ import com.ipass.taskManager.model.TaskStatus;
 import com.ipass.taskManager.service.SubtaskService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +90,11 @@ public class SubtaskController {
         description = "Atualiza o status de uma subtarefa por ID"
     )
     @PatchMapping("/{subtarefaId}/status")
-    public ResponseEntity<SubtaskResponseDto> updateSubtaskStatusById(@PathVariable UUID subtarefaId, @RequestParam TaskStatus status) {
+    public ResponseEntity<SubtaskResponseDto> updateSubtaskStatusById(
+        @PathVariable UUID subtarefaId, 
+        @Parameter(description = "Status para atualizar a tarefa.", schema = @Schema(type = "string", allowableValues = {"PENDENTE", "EM_ANDAMENTO", "CONCLUIDA"}))
+        @RequestParam(required = true) TaskStatus status
+    ) {
         Subtask updatedSubtask = subtaskService.updateSubtaskStatus(subtarefaId, status);
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(updatedSubtask));
     }

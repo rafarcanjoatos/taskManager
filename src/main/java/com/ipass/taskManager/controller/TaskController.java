@@ -64,15 +64,15 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<List<TaskResponseDto>> getAllTasks(
         @Parameter(description = "Status para filtrar as tarefas.", schema = @Schema(type = "string", allowableValues = {"PENDENTE", "EM_ANDAMENTO", "CONCLUIDA"}))
-        @RequestParam(required = false) String status
+        @RequestParam(required = false) TaskStatus status
     ) {
         TaskStatus taskStatus = null;
-        if (status != null && !status.trim().isEmpty()) {
-            if (TaskStatus.EXCLUIDA.name().equalsIgnoreCase(status)) {
+        if (status != null) {
+            if (status == TaskStatus.EXCLUIDA) {
                 throw new IllegalArgumentException("O status 'EXCLUIDA' não é válido para consulta.");
             }
             try {
-                taskStatus = TaskStatus.valueOf(status.toUpperCase());
+                taskStatus = status;
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Status inválido: " + status);
             }
@@ -99,7 +99,11 @@ public class TaskController {
         description = "Atualiza somente o status de uma tarefa por ID"
     )
     @PatchMapping("/{id}/status")
-    public ResponseEntity<TaskResponseDto> updateTaskStatusById(@PathVariable UUID id, @RequestParam TaskStatus status) {
+    public ResponseEntity<TaskResponseDto> updateTaskStatusById(
+        @PathVariable UUID id, 
+        @Parameter(description = "Status para atualizar a tarefa.", schema = @Schema(type = "string", allowableValues = {"PENDENTE", "EM_ANDAMENTO", "CONCLUIDA"}))
+        @RequestParam(required = true) TaskStatus status
+    ) {
         Task updatedTask = taskService.updateTaskStatus(id, status);
         return ResponseEntity.ok(TaskResponseDto.fromEntity(updatedTask));
     }
