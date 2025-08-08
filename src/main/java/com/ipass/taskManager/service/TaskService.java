@@ -1,23 +1,24 @@
 package com.ipass.taskManager.service;
 
-import com.ipass.taskManager.dto.TaskRequestDto;
-import com.ipass.taskManager.model.Task;
-import com.ipass.taskManager.model.TaskStatus;
-import com.ipass.taskManager.repository.SubtaskRepository;
-import com.ipass.taskManager.repository.TaskRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ValidationException;
-
 import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.ipass.taskManager.dto.TaskRequestDto;
+import com.ipass.taskManager.model.Task;
+import com.ipass.taskManager.model.TaskStatus;
+import com.ipass.taskManager.model.User;
+import com.ipass.taskManager.repository.SubtaskRepository;
+import com.ipass.taskManager.repository.TaskRepository;
+import com.ipass.taskManager.repository.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ValidationException;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final SubtaskRepository subtaskRepository;
+    private final UserRepository userRepository;
 
     
     @Transactional
@@ -37,7 +39,9 @@ public class TaskService {
         Task task = new Task();
         task.setTitulo(taskRequestDto.getTitulo());
         task.setDescricao(taskRequestDto.getDescricao());
-        task.setUsuarioId(usuarioId);
+        User user = userRepository.findById(usuarioId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + usuarioId));
+        task.setUsuario(user);
 
         return taskRepository.save(task);
     }

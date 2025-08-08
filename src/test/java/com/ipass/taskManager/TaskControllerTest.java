@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,6 +62,7 @@ class TaskControllerTest {
         taskRequest.setDescricao("Descrição 1");
         taskRequest.setUsuarioId(testUser.getId());
 
+
         mockMvc.perform(post("/tarefas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskRequest)))
@@ -92,7 +92,7 @@ class TaskControllerTest {
     void getTaskById_whenTaskExists_returnsTask() throws Exception {
         Task task = new Task();
         task.setTitulo("Tarefa para buscar");
-        task.setUsuarioId(testUser.getId());
+        task.setUsuario(testUser);
         Task savedTask = taskRepository.save(task);
 
         mockMvc.perform(get("/tarefas/{id}", savedTask.getId()))
@@ -107,7 +107,7 @@ class TaskControllerTest {
     void updateTask_withValidData_returnsOk() throws Exception {
         Task task = new Task();
         task.setTitulo("Tarefa Original");
-        task.setUsuarioId(testUser.getId());
+        task.setUsuario(testUser);
         Task savedTask = taskRepository.save(task);
 
         TaskRequestDto updateRequest = new TaskRequestDto();
@@ -128,7 +128,7 @@ class TaskControllerTest {
     void completeTask_whenTaskExists_returnsOk() throws Exception {
         Task task = new Task();
         task.setTitulo("Tarefa a completar");
-        task.setUsuarioId(testUser.getId());
+        task.setUsuario(testUser);
         task.setStatus(TaskStatus.PENDENTE);
         Task savedTask = taskRepository.save(task);
 

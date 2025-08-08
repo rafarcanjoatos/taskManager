@@ -1,11 +1,12 @@
 package com.ipass.taskManager.dto;
 
-import com.ipass.taskManager.model.Task;
-import com.ipass.taskManager.model.TaskStatus;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import com.ipass.taskManager.model.Task;
+import com.ipass.taskManager.model.TaskStatus;
+
+import lombok.Data;
 
 @Data
 public class TaskResponseDto {
@@ -28,9 +29,8 @@ public class TaskResponseDto {
         dto.setStatus(task.getStatus());
         dto.setDataCriacao(task.getDataCriacao());
         dto.setDataConclusao(task.getDataConclusao());
-        if (task.getUsuarioId() != null) {
-            dto.setUsuarioId(task.getUsuarioId());
-        }
+        dto.setUsuarioId(task.getUsuario().getId());
+        
         return dto;
     }
 }

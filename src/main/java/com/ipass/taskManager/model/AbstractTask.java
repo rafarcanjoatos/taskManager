@@ -1,14 +1,16 @@
 package com.ipass.taskManager.model;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,10 +19,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.hibernate.annotations.CreationTimestamp;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -52,8 +50,4 @@ public abstract class AbstractTask {
 
     @Column(name = "data_conclusao")
     private LocalDateTime dataConclusao;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private UUID usuarioId;
 }

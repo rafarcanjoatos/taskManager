@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.ipass</groupId>
 	<artifactId>taskManager</artifactId>
-	<version>2.0.0</version>
+	<version>3.0.0</version>
 	<name>taskManager</name>
 	<description>Desafio técnico para a vaga de Desenvolvedor Backend Java Pleno</description>
 	<url/>

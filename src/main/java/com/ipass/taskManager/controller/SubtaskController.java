@@ -1,5 +1,20 @@
 package com.ipass.taskManager.controller;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ipass.taskManager.dto.SubtaskRequestDto;
 import com.ipass.taskManager.dto.SubtaskResponseDto;
 import com.ipass.taskManager.model.Subtask;
@@ -10,13 +25,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Tag(name = "Subtarefas", description = "Operações relacionadas a subtarefas na aplicação.")
 @RestController
@@ -68,8 +76,8 @@ public class SubtaskController {
         description = "Atualiza os detalhes de uma subtarefa por ID, como título e descrição"
     )
     @PatchMapping("/{subtarefaId}")
-    public ResponseEntity<SubtaskResponseDto> updateSubtaskById(@PathVariable UUID subtarefaId, @Valid @RequestBody SubtaskRequestDto subtaskDetailsDto) {
-        Subtask updatedSubtask = subtaskService.updateSubtaskById(subtarefaId, subtaskDetailsDto);
+    public ResponseEntity<SubtaskResponseDto> updateSubtaskById(@PathVariable UUID subtarefaId, @Valid @RequestBody SubtaskRequestDto subtaskRequestDto) {
+        Subtask updatedSubtask = subtaskService.updateSubtaskById(subtarefaId, subtaskRequestDto);
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(updatedSubtask));
     }
 
@@ -79,7 +87,7 @@ public class SubtaskController {
         description = "Atualiza o status de uma subtarefa por ID"
     )
     @PatchMapping("/{subtarefaId}/status")
-    public ResponseEntity<SubtaskResponseDto> updateSubtaskStatusById(@PathVariable UUID subtarefaId, @RequestBody TaskStatus status) {
+    public ResponseEntity<SubtaskResponseDto> updateSubtaskStatusById(@PathVariable UUID subtarefaId, @RequestParam TaskStatus status) {
         Subtask updatedSubtask = subtaskService.updateSubtaskStatus(subtarefaId, status);
         return ResponseEntity.ok(SubtaskResponseDto.fromEntity(updatedSubtask));
     }

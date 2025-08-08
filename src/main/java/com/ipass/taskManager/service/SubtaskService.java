@@ -1,5 +1,12 @@
 package com.ipass.taskManager.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ipass.taskManager.dto.SubtaskRequestDto;
 import com.ipass.taskManager.exception.ResourceNotFoundException;
 import com.ipass.taskManager.model.Subtask;
@@ -9,12 +16,6 @@ import com.ipass.taskManager.repository.SubtaskRepository;
 
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,14 +29,12 @@ public class SubtaskService {
     @Transactional
     public Subtask createSubtask(UUID parentTaskId, SubtaskRequestDto subtaskRequestDto) {
         validateSubtaskRequest(subtaskRequestDto);
-
-        Task parentTask = taskService.getTaskById(parentTaskId);
  
         Subtask subtask = new Subtask();
         subtask.setTitulo(subtaskRequestDto.getTitulo());
         subtask.setDescricao(subtaskRequestDto.getDescricao());
-        subtask.setTarefaId(parentTaskId);
-        subtask.setUsuarioId(parentTask.getUsuarioId());
+        Task parentTask = taskService.getTaskById(parentTaskId);
+        subtask.setTarefa(parentTask);
  
         return subtaskRepository.save(subtask);
     }

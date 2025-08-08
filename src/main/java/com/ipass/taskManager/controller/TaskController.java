@@ -85,8 +85,8 @@ public class TaskController {
         description = "Atualiza os detalhes de uma tarefa por ID, como título e descrição"
     )
     @PatchMapping("/{id}")
-    public ResponseEntity<TaskResponseDto> updateTaskById(@PathVariable UUID id, @Valid @RequestBody TaskRequestDto taskDetailsDto) {
-        Task updatedTask = taskService.updateTask(id, taskDetailsDto);
+    public ResponseEntity<TaskResponseDto> updateTaskById(@PathVariable UUID id, @Valid @RequestBody TaskRequestDto taskRequestDto) {
+        Task updatedTask = taskService.updateTask(id, taskRequestDto);
         return ResponseEntity.ok(TaskResponseDto.fromEntity(updatedTask));
     }
 
