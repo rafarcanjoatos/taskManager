@@ -20,6 +20,7 @@ import com.ipass.taskManager.dto.TaskRequestDto;
 import com.ipass.taskManager.model.Task;
 import com.ipass.taskManager.model.TaskStatus;
 import com.ipass.taskManager.model.User;
+import com.ipass.taskManager.repository.SubtaskRepository;
 import com.ipass.taskManager.repository.TaskRepository;
 import com.ipass.taskManager.repository.UserRepository;
 
@@ -40,12 +41,16 @@ class TaskControllerTest {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private SubtaskRepository subtaskRepository;
+
     private User testUser;
 
     @BeforeEach
     @SuppressWarnings("unused")
     void setUp() {
         taskRepository.deleteAll();
+        subtaskRepository.deleteAll();
         userRepository.deleteAll();
 
         testUser = new User();
@@ -101,6 +106,42 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.titulo").value("Tarefa para buscar"));
     }
 
+    @Test
+    @DisplayName("Teste de integração: Obter tarefas por status")
+    void getTasksByStatus_whenTasksExist_returnsTaskList() throws Exception {
+        Task task = new Task();
+        task.setTitulo("Tarefa Pendente");
+        task.setUsuario(testUser);
+        task.setStatus(TaskStatus.PENDENTE);
+        Task savedTask = taskRepository.save(task);
+
+        mockMvc.perform(get("/tarefas/status")
+                        .param("status", TaskStatus.PENDENTE.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(savedTask.getId().toString()))
+                .andExpect(jsonPath("$[0].titulo").value("Tarefa Pendente"))
+                .andExpect(jsonPath("$[0].status").value(TaskStatus.PENDENTE.name()));
+    }
+    
+    @Test
+    @DisplayName("Teste de integração: Obter todas as tarefas")
+    void getAllTasks_whenTasksExist_returnsTaskList() throws Exception {
+        Task task1 = new Task();
+        task1.setTitulo("Tarefa 1");
+        task1.setUsuario(testUser);
+        taskRepository.save(task1);
+
+        Task task2 = new Task();
+        task2.setTitulo("Tarefa 2");
+        task2.setUsuario(testUser);
+        taskRepository.save(task2);
+
+        mockMvc.perform(get("/tarefas"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
 
     @Test
     @DisplayName("Teste de integração: Atualizar uma tarefa com PUT")
